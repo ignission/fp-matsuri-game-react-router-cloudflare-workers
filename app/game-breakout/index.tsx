@@ -33,12 +33,12 @@ const GameBreakout: React.FC = () => {
 		const brickOffsetTop = 30;
 		const brickOffsetLeft = 30;
 
-		// ブロックの二次元配列
-		const bricks: { x: number; y: number }[][] = [];
+		// ブロックの二次元配列（status追加）
+		const bricks: { x: number; y: number; status: number }[][] = [];
 		for (let c = 0; c < brickColumnCount; c++) {
 			bricks[c] = [];
 			for (let r = 0; r < brickRowCount; r++) {
-				bricks[c][r] = { x: 0, y: 0 };
+				bricks[c][r] = { x: 0, y: 0, status: 1 };
 			}
 		}
 
@@ -46,15 +46,17 @@ const GameBreakout: React.FC = () => {
 			if (!ctx) return;
 			for (let c = 0; c < brickColumnCount; c++) {
 				for (let r = 0; r < brickRowCount; r++) {
-					const brickX = c * (brickWidth + brickPadding) + brickOffsetLeft;
-					const brickY = r * (brickHeight + brickPadding) + brickOffsetTop;
-					bricks[c][r].x = brickX;
-					bricks[c][r].y = brickY;
-					ctx.beginPath();
-					ctx.rect(brickX, brickY, brickWidth, brickHeight);
-					ctx.fillStyle = "#0095DD";
-					ctx.fill();
-					ctx.closePath();
+					if (bricks[c][r].status === 1) {
+						const brickX = c * (brickWidth + brickPadding) + brickOffsetLeft;
+						const brickY = r * (brickHeight + brickPadding) + brickOffsetTop;
+						bricks[c][r].x = brickX;
+						bricks[c][r].y = brickY;
+						ctx.beginPath();
+						ctx.rect(brickX, brickY, brickWidth, brickHeight);
+						ctx.fillStyle = "#0095DD";
+						ctx.fill();
+						ctx.closePath();
+					}
 				}
 			}
 		}
@@ -77,12 +79,32 @@ const GameBreakout: React.FC = () => {
 			ctx.closePath();
 		}
 
+		function collisionDetection() {
+			for (let c = 0; c < brickColumnCount; c++) {
+				for (let r = 0; r < brickRowCount; r++) {
+					const b = bricks[c][r];
+					if (b.status === 1) {
+						if (
+							x > b.x &&
+							x < b.x + brickWidth &&
+							y > b.y &&
+							y < b.y + brickHeight
+						) {
+							dy = -dy;
+							b.status = 0;
+						}
+					}
+				}
+			}
+		}
+
 		function draw() {
 			if (!ctx) return;
 			ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
 			drawBricks();
 			drawBall();
 			drawPaddle();
+			collisionDetection();
 
 			// 壁との衝突判定
 			if (x + dx > CANVAS_WIDTH - BALL_RADIUS || x + dx < BALL_RADIUS) {
