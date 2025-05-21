@@ -1,4 +1,4 @@
-import { Welcome } from "../welcome/welcome";
+import GameBreakout from "../game-breakout";
 import type { Route } from "./+types/home";
 
 export function meta(_: Route.MetaArgs) {
@@ -12,6 +12,6 @@ export function loader({ context }: Route.LoaderArgs) {
 	return { message: context.cloudflare.env.VALUE_FROM_CLOUDFLARE };
 }
 
-export default function Home({ loaderData }: Route.ComponentProps) {
-	return <Welcome message={loaderData.message} />;
+export default function Home() {
+	return <GameBreakout />;
 }
