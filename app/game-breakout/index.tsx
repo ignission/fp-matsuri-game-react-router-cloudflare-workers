@@ -45,6 +45,9 @@ const GameBreakout: React.FC = () => {
 		// スコア管理
 		let score = 0;
 
+		// ライフ管理
+		let lives = 3;
+
 		function drawBricks() {
 			if (!ctx) return;
 			for (let c = 0; c < brickColumnCount; c++) {
@@ -89,6 +92,13 @@ const GameBreakout: React.FC = () => {
 			ctx.fillText(`Score: ${score}`, 8, 20);
 		}
 
+		function drawLives() {
+			if (!ctx) return;
+			ctx.font = "16px Arial";
+			ctx.fillStyle = "#0095DD";
+			ctx.fillText(`Lives: ${lives}`, CANVAS_WIDTH - 65, 20);
+		}
+
 		function collisionDetection() {
 			for (let c = 0; c < brickColumnCount; c++) {
 				for (let r = 0; r < brickRowCount; r++) {
@@ -122,6 +132,7 @@ const GameBreakout: React.FC = () => {
 			drawPaddle();
 			collisionDetection();
 			drawScore();
+			drawLives();
 
 			// 壁との衝突判定
 			if (x + dx > CANVAS_WIDTH - BALL_RADIUS || x + dx < BALL_RADIUS) {
@@ -133,9 +144,17 @@ const GameBreakout: React.FC = () => {
 				if (x > paddleX && x < paddleX + PADDLE_WIDTH) {
 					dy = -dy;
 				} else {
-					alert("GAME OVER");
-					cancelAnimationFrame(animationFrameId);
-					return;
+					lives--;
+					if (!lives) {
+						alert("GAME OVER");
+						cancelAnimationFrame(animationFrameId);
+						return;
+					}
+					x = CANVAS_WIDTH / 2;
+					y = CANVAS_HEIGHT - 30;
+					dx = 2;
+					dy = -2;
+					paddleX = (CANVAS_WIDTH - PADDLE_WIDTH) / 2;
 				}
 			}
 
