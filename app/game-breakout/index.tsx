@@ -3,6 +3,7 @@ import { useEffect, useRef } from "react";
 
 const CANVAS_WIDTH = 480;
 const CANVAS_HEIGHT = 320;
+const BALL_RADIUS = 10;
 
 const GameBreakout: React.FC = () => {
 	const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -13,26 +14,38 @@ const GameBreakout: React.FC = () => {
 		const ctx = canvas.getContext("2d");
 		if (!ctx) return;
 
-		// 赤い四角形
-		ctx.beginPath();
-		ctx.rect(20, 40, 50, 50);
-		ctx.fillStyle = "#FF0000";
-		ctx.fill();
-		ctx.closePath();
+		let x = CANVAS_WIDTH / 2;
+		let y = CANVAS_HEIGHT - 30;
+		const dx = 2;
+		const dy = -2;
 
-		// 緑の円
-		ctx.beginPath();
-		ctx.arc(240, 160, 20, 0, Math.PI * 2, false);
-		ctx.fillStyle = "green";
-		ctx.fill();
-		ctx.closePath();
+		function drawBall() {
+			if (!ctx) return;
+			ctx.beginPath();
+			ctx.arc(x, y, BALL_RADIUS, 0, Math.PI * 2);
+			ctx.fillStyle = "#0095DD";
+			ctx.fill();
+			ctx.closePath();
+		}
 
-		// 青い枠の四角形
-		ctx.beginPath();
-		ctx.rect(160, 10, 100, 40);
-		ctx.strokeStyle = "rgba(0, 0, 255, 0.5)";
-		ctx.stroke();
-		ctx.closePath();
+		function draw() {
+			if (!ctx) return;
+			ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+			drawBall();
+			x += dx;
+			y += dy;
+		}
+
+		let animationFrameId: number;
+		function renderLoop() {
+			draw();
+			animationFrameId = requestAnimationFrame(renderLoop);
+		}
+		renderLoop();
+
+		return () => {
+			cancelAnimationFrame(animationFrameId);
+		};
 	}, []);
 
 	return (
