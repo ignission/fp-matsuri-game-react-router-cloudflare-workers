@@ -42,6 +42,9 @@ const GameBreakout: React.FC = () => {
 			}
 		}
 
+		// スコア管理
+		let score = 0;
+
 		function drawBricks() {
 			if (!ctx) return;
 			for (let c = 0; c < brickColumnCount; c++) {
@@ -79,6 +82,13 @@ const GameBreakout: React.FC = () => {
 			ctx.closePath();
 		}
 
+		function drawScore() {
+			if (!ctx) return;
+			ctx.font = "16px Arial";
+			ctx.fillStyle = "#0095DD";
+			ctx.fillText(`Score: ${score}`, 8, 20);
+		}
+
 		function collisionDetection() {
 			for (let c = 0; c < brickColumnCount; c++) {
 				for (let r = 0; r < brickRowCount; r++) {
@@ -92,6 +102,12 @@ const GameBreakout: React.FC = () => {
 						) {
 							dy = -dy;
 							b.status = 0;
+							score++;
+							if (score === brickRowCount * brickColumnCount) {
+								alert("YOU WIN, CONGRATULATIONS!");
+								cancelAnimationFrame(animationFrameId);
+								return;
+							}
 						}
 					}
 				}
@@ -105,6 +121,7 @@ const GameBreakout: React.FC = () => {
 			drawBall();
 			drawPaddle();
 			collisionDetection();
+			drawScore();
 
 			// 壁との衝突判定
 			if (x + dx > CANVAS_WIDTH - BALL_RADIUS || x + dx < BALL_RADIUS) {
