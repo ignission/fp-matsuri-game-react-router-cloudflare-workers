@@ -4,6 +4,8 @@ import { useEffect, useRef } from "react";
 const CANVAS_WIDTH = 480;
 const CANVAS_HEIGHT = 320;
 const BALL_RADIUS = 10;
+const PADDLE_HEIGHT = 10;
+const PADDLE_WIDTH = 75;
 
 const GameBreakout: React.FC = () => {
 	const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -18,6 +20,9 @@ const GameBreakout: React.FC = () => {
 		let y = CANVAS_HEIGHT - 30;
 		let dx = 2;
 		let dy = -2;
+		let paddleX = (CANVAS_WIDTH - PADDLE_WIDTH) / 2;
+		let rightPressed = false;
+		let leftPressed = false;
 
 		function drawBall() {
 			if (!ctx) return;
@@ -28,10 +33,20 @@ const GameBreakout: React.FC = () => {
 			ctx.closePath();
 		}
 
+		function drawPaddle() {
+			if (!ctx) return;
+			ctx.beginPath();
+			ctx.rect(paddleX, CANVAS_HEIGHT - PADDLE_HEIGHT, PADDLE_WIDTH, PADDLE_HEIGHT);
+			ctx.fillStyle = "#0095DD";
+			ctx.fill();
+			ctx.closePath();
+		}
+
 		function draw() {
 			if (!ctx) return;
 			ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
 			drawBall();
+			drawPaddle();
 
 			// 壁との衝突判定
 			if (x + dx > CANVAS_WIDTH - BALL_RADIUS || x + dx < BALL_RADIUS) {
@@ -43,7 +58,33 @@ const GameBreakout: React.FC = () => {
 
 			x += dx;
 			y += dy;
+
+			// パドルの移動
+			if (rightPressed) {
+				paddleX = Math.min(paddleX + 7, CANVAS_WIDTH - PADDLE_WIDTH);
+			} else if (leftPressed) {
+				paddleX = Math.max(paddleX - 7, 0);
+			}
 		}
+
+		function keyDownHandler(e: KeyboardEvent) {
+			if (e.key === "Right" || e.key === "ArrowRight") {
+				rightPressed = true;
+			} else if (e.key === "Left" || e.key === "ArrowLeft") {
+				leftPressed = true;
+			}
+		}
+
+		function keyUpHandler(e: KeyboardEvent) {
+			if (e.key === "Right" || e.key === "ArrowRight") {
+				rightPressed = false;
+			} else if (e.key === "Left" || e.key === "ArrowLeft") {
+				leftPressed = false;
+			}
+		}
+
+		document.addEventListener("keydown", keyDownHandler, false);
+		document.addEventListener("keyup", keyUpHandler, false);
 
 		let animationFrameId: number;
 		function renderLoop() {
@@ -54,6 +95,8 @@ const GameBreakout: React.FC = () => {
 
 		return () => {
 			cancelAnimationFrame(animationFrameId);
+			document.removeEventListener("keydown", keyDownHandler, false);
+			document.removeEventListener("keyup", keyUpHandler, false);
 		};
 	}, []);
 
