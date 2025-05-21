@@ -52,8 +52,16 @@ const GameBreakout: React.FC = () => {
 			if (x + dx > CANVAS_WIDTH - BALL_RADIUS || x + dx < BALL_RADIUS) {
 				dx = -dx;
 			}
-			if (y + dy > CANVAS_HEIGHT - BALL_RADIUS || y + dy < BALL_RADIUS) {
+			if (y + dy < BALL_RADIUS) {
 				dy = -dy;
+			} else if (y + dy > CANVAS_HEIGHT - BALL_RADIUS) {
+				if (x > paddleX && x < paddleX + PADDLE_WIDTH) {
+					dy = -dy;
+				} else {
+					alert("GAME OVER");
+					cancelAnimationFrame(animationFrameId);
+					return;
+				}
 			}
 
 			x += dx;
