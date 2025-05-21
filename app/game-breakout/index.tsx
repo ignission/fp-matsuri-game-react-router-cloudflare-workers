@@ -166,8 +166,17 @@ const GameBreakout: React.FC = () => {
 			}
 		}
 
+		function mouseMoveHandler(e: MouseEvent) {
+			if (!canvas) return;
+			const relativeX = e.clientX - canvas.offsetLeft;
+			if (relativeX > 0 && relativeX < CANVAS_WIDTH) {
+				paddleX = Math.max(0, Math.min(relativeX - PADDLE_WIDTH / 2, CANVAS_WIDTH - PADDLE_WIDTH));
+			}
+		}
+
 		document.addEventListener("keydown", keyDownHandler, false);
 		document.addEventListener("keyup", keyUpHandler, false);
+		document.addEventListener("mousemove", mouseMoveHandler, false);
 
 		let animationFrameId: number;
 		function renderLoop() {
@@ -180,6 +189,7 @@ const GameBreakout: React.FC = () => {
 			cancelAnimationFrame(animationFrameId);
 			document.removeEventListener("keydown", keyDownHandler, false);
 			document.removeEventListener("keyup", keyUpHandler, false);
+			document.removeEventListener("mousemove", mouseMoveHandler, false);
 		};
 	}, []);
 
