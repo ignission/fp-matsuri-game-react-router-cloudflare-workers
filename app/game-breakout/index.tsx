@@ -48,6 +48,15 @@ const GameBreakout: React.FC = () => {
 		// ライフ管理
 		let lives = 3;
 
+
+		// ロゴ画像の読み込み
+		const logoImg = new window.Image();
+		logoImg.src = '/app/game-breakout/logo.jpg';
+		let logoImgLoaded = false;
+		logoImg.onload = () => {
+			logoImgLoaded = true;
+		};
+
 		function drawBricks() {
 			if (!ctx) return;
 			for (let c = 0; c < brickColumnCount; c++) {
@@ -69,11 +78,21 @@ const GameBreakout: React.FC = () => {
 
 		function drawBall() {
 			if (!ctx) return;
-			ctx.beginPath();
-			ctx.arc(x, y, BALL_RADIUS, 0, Math.PI * 2);
-			ctx.fillStyle = "#0095DD";
-			ctx.fill();
-			ctx.closePath();
+			if (logoImgLoaded) {
+				ctx.drawImage(
+					logoImg,
+					x - BALL_RADIUS,
+					y - BALL_RADIUS,
+					BALL_RADIUS * 2,
+					BALL_RADIUS * 2
+				);
+			} else {
+				ctx.beginPath();
+				ctx.arc(x, y, BALL_RADIUS, 0, Math.PI * 2);
+				ctx.fillStyle = "#0095DD";
+				ctx.fill();
+				ctx.closePath();
+			}
 		}
 
 		function drawPaddle() {
@@ -218,7 +237,7 @@ const GameBreakout: React.FC = () => {
 				ref={canvasRef}
 				width={CANVAS_WIDTH}
 				height={CANVAS_HEIGHT}
-				style={{ background: "#eee", display: "block", margin: "0 auto" }}
+				style={{ background: "#fff", display: "block", margin: "0 auto" }}
 			/>
 		</div>
 	);
