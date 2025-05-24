@@ -1,6 +1,6 @@
 # An example of React Router v7 + Cloudflare Workers: Breakout Game
 
-This project was created to demonstrate how React Router v7 and Cloudflare Workers enable you to build and deploy full-stack applications easily and at low cost. As a deployed application example, we chose a "Breakout" game. Since I am organizers of the [Functional Programming Matsuri (FP Matsuri)](https://2025.fp-matsuri.org/), the ball in the game uses the FP Matsuri logo as a fun touch.
+This project was created to demonstrate how React Router v7 and Cloudflare Workers make it easy and cost-effective to build and deploy full-stack applications. As a deployment example, we chose a "Breakout" game. Since I am one of the organizers of the [Functional Programming Matsuri (FP Matsuri)](https://2025.fp-matsuri.org/), the ball in the game features the FP Matsuri logo as a fun touch.
 
 ![Demo](https://raw.githubusercontent.com/ignission/fp-matsuri-game-react-router-cloudflare-workers/refs/heads/main/docs/demo.gif)
 
@@ -12,17 +12,16 @@ This project was created to demonstrate how React Router v7 and Cloudflare Worke
 - 🔄 Data loading and mutations
 - 🔒 TypeScript by default
 - 🎨 TailwindCSS for styling
-- ☁️ Cloudflare Workers ready (with Wrangler)
+- ☁️ Ready for Cloudflare Workers (with Wrangler)
 - 🕹️ Includes a playable Breakout game
 
 ## Game Overview
 
-This project includes a classic "Breakout" game implemented in React.  
-You control a paddle to bounce a ball and break all the bricks.  
-- Move the paddle with your mouse or arrow keys.
-- The game ends when you lose all your lives or clear all bricks.
+This project includes a classic "Breakout" game implemented in React.
+- Control the paddle with your mouse or arrow keys.
+- The game ends when you lose all your lives or clear all the bricks.
 - The ball's bounce angle changes depending on where it hits the paddle.
-- The game uses a custom React reducer for state management and canvas for rendering.
+- The game uses a custom React reducer for state management and the canvas element for rendering.
 
 ## Project Structure
 
@@ -59,7 +58,7 @@ pnpm install
 ```bash
 pnpm run dev
 ```
-App will be available at `http://localhost:5173`.
+The app will be available at `http://localhost:5173`.
 
 ### Build
 
