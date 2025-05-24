@@ -35,6 +35,28 @@ type Action =
 	| { type: "KEY_UP"; key: string }
 	| { type: "MOUSE_MOVE"; x: number };
 
+// 速度ベクトルをランダムな角度で生成する関数
+function getRandomVelocity(speed = 2) {
+	// 30度〜150度の範囲でランダム（上方向のみ）
+	const minAngle = (30 * Math.PI) / 180;
+	const maxAngle = (150 * Math.PI) / 180;
+	const angle = Math.random() * (maxAngle - minAngle) + minAngle;
+	const dx = speed * Math.cos(angle);
+	const dy = -Math.abs(speed * Math.sin(angle)); // 上方向
+	return { dx, dy };
+}
+
+// パドルの当たり位置から反射角度を計算する関数
+function getPaddleBounceVelocity(ballX: number, paddleX: number, paddleWidth: number, speed = 2) {
+	// パドル中心との差を-1〜1に正規化（符号を反転）
+	const relativeIntersect = ((ballX - (paddleX + paddleWidth / 2)) / (paddleWidth / 2)) * -1;
+	// 反射角度を60度〜120度（-30度〜+30度）にマッピング
+	const bounceAngle = (relativeIntersect * 60 + 90) * (Math.PI / 180); // 90度±30度
+	const dx = speed * Math.cos(bounceAngle);
+	const dy = -Math.abs(speed * Math.sin(bounceAngle));
+	return { dx, dy };
+}
+
 // 初期状態生成関数
 function createInitialState(): GameState {
 	const brickRowCount = 3;
@@ -51,11 +73,12 @@ function createInitialState(): GameState {
 			bricks[c][r] = { x: 0, y: 0, status: 1 };
 		}
 	}
+	const { dx, dy } = getRandomVelocity(2);
 	return {
 		x: CANVAS_WIDTH / 2,
 		y: CANVAS_HEIGHT - 30,
-		dx: 2,
-		dy: -2,
+		dx,
+		dy,
 		paddleX: (CANVAS_WIDTH - PADDLE_WIDTH) / 2,
 		rightPressed: false,
 		leftPressed: false,
@@ -107,15 +130,19 @@ function reducer(state: GameState, action: Action): GameState {
 				dy = -dy;
 			} else if (y + dy > CANVAS_HEIGHT - BALL_RADIUS) {
 				if (x > paddleX && x < paddleX + PADDLE_WIDTH) {
-					dy = -dy;
+					// パドルの当たり位置で反射角度を変える
+					const v = getPaddleBounceVelocity(x, paddleX, PADDLE_WIDTH, Math.sqrt(dx*dx + dy*dy));
+					dx = v.dx;
+					dy = v.dy;
 				} else {
 					lives--;
 					if (lives > 0) {
 						// 初期位置に戻す
 						x = CANVAS_WIDTH / 2;
 						y = CANVAS_HEIGHT - 30;
-						dx = 2;
-						dy = -2;
+						const v = getRandomVelocity(2);
+						dx = v.dx;
+						dy = v.dy;
 						paddleX = (CANVAS_WIDTH - PADDLE_WIDTH) / 2;
 					} else {
 						// livesが0になったらそのまま（alert等は副作用で）
