@@ -226,7 +226,7 @@ const GameBreakout: React.FC = () => {
 
 		// ロゴ画像の読み込み
 		const logoImg = new window.Image();
-		logoImg.src = '/app/game-breakout/logo.jpg';
+		logoImg.src = '/app/game-breakout/logo.png';
 		let logoImgLoaded = false;
 		logoImg.onload = () => {
 			logoImgLoaded = true;
