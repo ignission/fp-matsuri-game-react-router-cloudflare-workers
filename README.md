@@ -28,12 +28,12 @@ You control a paddle to bounce a ball and break all the bricks.
 
 ```
 /app
-  /game-breakout   # Breakout game implementation (React + Canvas)
-  /routes          # Application routes (home loads the game)
-/public            # Static assets
+  /game-breakout           # Breakout game implementation (React + Canvas)
+  /routes                  # Application routes (home loads the game)
+/public                    # Static assets
 /worker-configuration.d.ts # Cloudflare Worker types
-/vite.config.ts    # Vite configuration
-/wrangler.jsonc    # Cloudflare Wrangler config
+/vite.config.ts            # Vite configuration
+/wrangler.jsonc            # Cloudflare Wrangler config
 ```
 
 ## Tech Stack
