@@ -319,4 +319,5 @@ const GameBreakout: React.FC = () => {
 	);
 };
 
+export { CANVAS_HEIGHT, CANVAS_WIDTH, createInitialState, PADDLE_WIDTH, reducer };
 export default GameBreakout;
