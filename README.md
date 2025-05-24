@@ -2,6 +2,8 @@
 
 This project was created to demonstrate how React Router v7 and Cloudflare Workers enable you to build and deploy full-stack applications easily and at low cost. As a deployed application example, we chose a "Breakout" game. Since I am organizers of the [Functional Programming Matsuri (FP Matsuri)](https://2025.fp-matsuri.org/), the ball in the game uses the FP Matsuri logo as a fun touch.
 
+![Demo](https://raw.githubusercontent.com/ignission/fp-matsuri-game-react-router-cloudflare-workers/refs/heads/main/docs/demo.gif)
+
 ## Features
 
 - 🚀 Server-side rendering with React Router
