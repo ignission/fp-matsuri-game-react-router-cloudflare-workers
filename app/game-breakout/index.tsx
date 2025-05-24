@@ -69,6 +69,7 @@ function createInitialState(): GameState {
 function reducer(state: GameState, action: Action): GameState {
 	switch (action.type) {
 		case "TICK": {
+			if (state.lives <= 0) return state;
 			// 定数
 			const brickRowCount = 3;
 			const brickColumnCount = 5;
